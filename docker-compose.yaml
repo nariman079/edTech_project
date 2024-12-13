@@ -1,7 +1,7 @@
 services:
   backend:
     build: .
-    command: poetry run python backend/src/manage.py migrate && python backend/src/manage.py runserver 
+    command: poetry run python backend/src/manage.py migrate && poetry run python backend/src/manage.py runserver 
     volumes:
       - ./:/app
     restart: unless-stopped
