@@ -1,10 +1,32 @@
 from django.contrib import admin
 
 # Register your models here.
-from django.contrib import admin
 from .models import CustomUser
 
-@admin.register(CustomUser)
-class CustomUserAdmin(admin.ModelAdmin):
-    list_display = ('username', 'full_name', 'student_class', 'mail')
-    
+from django.contrib.auth.admin import UserAdmin
+
+
+class CustomUserAdmin(UserAdmin):
+    model = CustomUser
+    list_display = ('username', 'email', 'is_active', 'is_staff', 'is_superuser')
+    list_filter = ('is_active', 'is_staff', 'is_superuser', 'groups')
+    fieldsets = (
+        (None, {'fields': ('username', 'password')}),
+        ('Personal info', {'fields': ('email', 'first_name', 'last_name', 'patronymic')}),
+    )
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('username', 'email', 'password1', 'password2', 'is_active', 'is_staff', 'is_superuser'),
+        }),
+    )
+    search_fields = ('username', 'email')
+    ordering = ('username',)
+    filter_horizontal = ('groups', 'user_permissions')
+
+    def save_model(self, request, obj, form, change):
+        if form.cleaned_data.get('password') and not obj.password.startswith('pbkdf2_'):
+            obj.set_password(form.cleaned_data['password'])
+        super().save_model(request, obj, form, change)
+
+admin.site.register(CustomUser, CustomUserAdmin)

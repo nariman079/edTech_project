@@ -9,13 +9,14 @@
             <p class="end_logo">Дагестанский государственный технический университет</p>
         </div>
         <div class="auth_block">
-            <img src="" alt="" class="logo">
+            <img :src="require('@/assets/images/middle_logo.png')" alt="" class="logo">
             <p class="auth_title">Авторизация</p>
             <div>
-                <label for="login">Логин:</label><br>
-                <input class="login_input" type="text" id="login" v-model="login" placeholder="username">
-                <label for="login">Пароль:</label><br>
-                <input class="login_input" type="password" id="login" v-model="password" placeholder="**************">
+                <label for="login">Логин:</label>
+                <input @input="clearErrorMessage" class="login_input" type="text" id="login" v-model="login" placeholder="username">
+                <label for="login">Пароль:</label>
+                <input @input="clearErrorMessage" class="login_input" type="password" id="login" v-model="password" placeholder="**************">
+                <span class="errorMessage">{{ errorMessage }}</span>
             </div>
             <button @click="loginFetch" class="login_button" type="button">Войти в систему</button>
             <div><br></div>
@@ -29,7 +30,8 @@ export default {
             baseURL: 'http://localhost:8000',
             userAuth: '/users/api/token/',
             login: "",
-            password: ""
+            password: "",
+            errorMessage: ""
         }
     },
     mounted () {
@@ -42,6 +44,9 @@ export default {
         }
     },
     methods: {
+        clearErrorMessage(){
+            this.errorMessage = ""
+        },
         async loginFetch(){
             const response = await fetch(this.baseURL + this.userAuth, 
                 {
@@ -62,6 +67,8 @@ export default {
                     name: 'Main'
                 })
 
+            } else {
+                this.errorMessage = "Ошибка ввода логина или пароля"
             }
         }
     }
@@ -74,6 +81,9 @@ export default {
     body {
         margin: 0;
 
+    }
+    .errorMessage{ 
+        color: tomato;
     }
     .auth_main_block {
         display: flex;
@@ -97,6 +107,7 @@ export default {
     }
     .auth_block div{
         margin-top: 2px;
+        
 
     }
     .main_logo{ 
@@ -111,7 +122,9 @@ export default {
         padding: 17px;
         border: none;
         border-radius: 6px;
-        width: 100%;
+        width: 400px;
+        display: flex;
+        flex-direction: column;
     }
     label {
         font-size: 20px;
@@ -121,7 +134,7 @@ export default {
         font-size: 48px;
     }
     .login_button{
-        padding: 20px;
+        padding: 15px 25px;
         border: none;
         border-radius: 6px;
         cursor: pointer;
@@ -133,20 +146,54 @@ export default {
         border: 3px solid #0d8bad;
         color: #0d8bad;
     }
-    @media (max-width: 910px) {
-        .auth_main_block{
-            flex-direction: column;
-        }
+    @media (max-width: 1365px) {
+        
         .info_block{
-            width: 94%;
+            width: 30%;
         }
         .auth_block{
-            width: 100%;
+            width: 70%;
         }
         .auth_block div{
             margin: auto;
         }
     }
+    @media (max-width: 1185px) {
+   
+        .info_block{
+            width: 30%;
+        }
+        .auth_block{
+            width: 70%;
+        }
+        .auth_block div{
+            margin: auto;
+        }
+        .main_logo{
+            font-size: 60px;
+        }
+    } 
+    @media (max-width: 910px) {
+        .auth_main_block{
+            flex-direction: column;
+        }
+        .info_block{
+            width: 95%;
+        }
+        .auth_block{
+            margin-top: 30px;
+            width: 100%;
+        }
+        .auth_block div{
+            margin: auto;
+        }
+        .login_input{
+            display: flex;
+            flex-direction: column;
+            width: 400px;
+        }
+    }
+    
     @media (max-width: 475px) {
         .auth_main_block{
             flex-direction: column;
@@ -156,6 +203,10 @@ export default {
         }
         .auth_block{
             width: 100%;
+        }
+        .login_input{
+   
+            width: 240px;
         }
     }
 

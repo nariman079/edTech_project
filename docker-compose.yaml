@@ -1,0 +1,24 @@
+services:
+  backend:
+    build: .
+    command: poetry run python manage.py runserver
+    volumes:
+      - ./:/app
+      - uploads:/app/uploads
+    restart: unless-stopped
+    depends_on:
+      - cache
+      - mongo
+    network_mode: 'host'
+
+  load_balancer:
+    image: nginx
+    ports:
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./frontend/dist:/app/frontend
+      - /etc/letsencrypt:/etc/letsencrypt/
+    depends_on:
+      - backend
+    network_mode: 'host'
