@@ -4,7 +4,6 @@ services:
     command: poetry run python manage.py migrate && python manage.py runserver 
     volumes:
       - ./:/app
-      - uploads:/app/uploads
     restart: unless-stopped
     network_mode: 'host'
 
