@@ -1,14 +1,11 @@
 services:
   backend:
     build: .
-    command: poetry run python manage.py runserver
+    command: poetry run python manage.py migrate && python manage.py runserver 
     volumes:
       - ./:/app
       - uploads:/app/uploads
     restart: unless-stopped
-    depends_on:
-      - cache
-      - mongo
     network_mode: 'host'
 
   load_balancer:
