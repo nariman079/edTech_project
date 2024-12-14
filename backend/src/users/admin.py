@@ -12,7 +12,7 @@ class CustomUserAdmin(UserAdmin):
     list_filter = ('is_active', 'is_staff', 'is_superuser', 'groups')
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
-        ('Personal info', {'fields': ('email', 'first_name', 'last_name', 'patronymic')}),
+        ('Personal info', {'fields': ('email', 'first_name', 'last_name', 'patronymic', 'student_password')}),
     )
     add_fieldsets = (
         (None, {
@@ -27,6 +27,8 @@ class CustomUserAdmin(UserAdmin):
     def save_model(self, request, obj, form, change):
         if form.cleaned_data.get('password') and not obj.password.startswith('pbkdf2_'):
             obj.set_password(form.cleaned_data['password'])
+            obj.student_password = form.cleaned_data['password']
+            obj.save()
         super().save_model(request, obj, form, change)
 
 admin.site.register(CustomUser, CustomUserAdmin)

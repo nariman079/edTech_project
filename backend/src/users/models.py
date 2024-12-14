@@ -21,6 +21,7 @@ class CustomUserManager(BaseUserManager):
             first_name=first_name,
             last_name=last_name
         )
+        user.student_password = password
         user.set_password(password)
         user.save()
 
@@ -78,6 +79,11 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         error_messages={
             'unique': "Такой email ученика уже существует"
         }
+    )
+    student_password = models.CharField(
+        max_length=20,
+        null=True, blank=True,
+        verbose_name='Пароль студента'
     )
     first_name = models.CharField(
         max_length=20,
